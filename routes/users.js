@@ -1,42 +1,24 @@
 import express from "express";
-import { v4 as uuidv4 } from "uuid";
+import {
+  getUsers,
+  createUser,
+  getUser,
+  deleteUser,
+  updateUser,
+} from "../controllers/users.js";
 
 const router = express.Router();
 
 let users = [];
 
-router.get("/", (req, res) => {
-  res.send(users);
-});
+router.get("/", getUsers);
 
-router.post("/", (req, res) => {
-  const user = req.body;
-  users.push({ ...user, id: uuidv4() });
-  res.send(`user dengan nama ${user.firstName} telah ditambah!`);
-});
+router.post("/", createUser);
 
-router.get("/:id", (req, res) => {
-  const { id } = req.params;
-  const userDetail = users.find((user) => user.id === id);
-  res.send(userDetail);
-});
+router.get("/:id", getUser);
 
-router.delete("/:id", (req, res) => {
-  const { id } = req.params;
-  users = users.filter((user) => user.id !== id);
-  res.send(`user dengan id ${id} deleted!`);
-});
+router.delete("/:id", deleteUser);
 
-router.patch("/:id", (req, res) => {
-  const { id } = req.params;
-  const { firstName, lastName, age } = req.body;
-  const user = users.find((user) => user.id === id);
-
-  if (firstName) user.firstName = firstName;
-  if (lastName) user.lastName = lastName;
-  if (age) user.age = age;
-
-  res.send(`User dengan id ${id} telah terupdate!`);
-});
+router.patch("/:id", updateUser);
 
 export default router;
